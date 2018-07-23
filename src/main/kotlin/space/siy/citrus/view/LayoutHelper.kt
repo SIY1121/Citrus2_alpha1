@@ -2,6 +2,7 @@ package space.siy.citrus.view
 
 import javafx.scene.Node
 import javafx.scene.control.Control
+import javafx.scene.layout.AnchorPane
 import javafx.scene.layout.Pane
 import javax.swing.plaf.synth.Region
 
@@ -50,3 +51,11 @@ fun Pane.fitToParentW(parent : Pane){
         this.maxWidth = v
     }
 }
+
+fun Node.setAllAnchorToZero(){
+    AnchorPane.setTopAnchor(this,0.0)
+    AnchorPane.setBottomAnchor(this,0.0)
+    AnchorPane.setLeftAnchor(this,0.0)
+    AnchorPane.setRightAnchor(this,0.0)
+}
+

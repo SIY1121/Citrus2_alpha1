@@ -1,4 +1,4 @@
-package space.siy.citrus.view
+package space.siy.citrus.view.panel
 
 import javafx.application.Platform
 import javafx.geometry.Insets

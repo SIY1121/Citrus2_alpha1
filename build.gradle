@@ -14,6 +14,13 @@ repositories {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.23.4'
+
+    compile group: 'org.bytedeco', name: 'javacv-platform', version: '1.4.2'
+
+    compile 'de.jensd:fontawesomefx-commons:9.1.2'
+    compile 'de.jensd:fontawesomefx-materialdesignfont:2.0.26-9.1.2'
+
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 

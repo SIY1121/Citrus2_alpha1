@@ -2,25 +2,38 @@
 
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import space.siy.citrus.view.AcceptablePane?>
-<?import space.siy.citrus.view.ProjectPane?>
-<?import space.siy.citrus.view.TimelinePane?>
+<?import space.siy.citrus.view.panel.AcceptablePane?>
+<?import space.siy.citrus.view.panel.project.ProjectPane?>
+<?import space.siy.citrus.view.panel.TimelinePane?>
 
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
 <AnchorPane fx:id="root" prefHeight="400.0" prefWidth="600.0" stylesheets="@main.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="space.siy.citrus.controllers.MainController">
-    <SplitPane fx:id="verticalSplitPane" dividerPositions="0.5" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <SplitPane fx:id="topHorizontalSplitPane" dividerPositions="0.33, 0.66">
-            <AcceptablePane />
-            <AcceptablePane />
-            <AcceptablePane prefHeight="195.0" prefWidth="163.0" />
-        </SplitPane>
-        <SplitPane fx:id="bottomHorizontalSplitPane" dividerPositions="0.33, 0.66">
-            <AcceptablePane>
-                <ProjectPane />
-            </AcceptablePane>
-            <AcceptablePane />
-            <AcceptablePane>
-                <TimelinePane />
-            </AcceptablePane>
-        </SplitPane>
-    </SplitPane>
+    <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <top>
+            <AnchorPane>
+                <MenuBar AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <Menu text="ファイル">
+                        <MenuItem text="開く"/>
+                    </Menu>
+                </MenuBar>
+            </AnchorPane>
+        </top>
+        <center>
+            <SplitPane fx:id="verticalSplitPane" dividerPositions="0.5" orientation="VERTICAL" >
+                <SplitPane fx:id="topHorizontalSplitPane" dividerPositions="0.33, 0.66">
+                    <AcceptablePane />
+                    <AcceptablePane />
+                    <AcceptablePane />
+                </SplitPane>
+                <SplitPane fx:id="bottomHorizontalSplitPane" dividerPositions="0.33, 0.66">
+                    <AcceptablePane/>
+                    <AcceptablePane />
+                    <AcceptablePane/>
+                </SplitPane>
+            </SplitPane>
+        </center>
+    </BorderPane>
 </AnchorPane>
