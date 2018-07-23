@@ -9,6 +9,9 @@ import space.siy.citrus.controllers.MainController
 import space.siy.citrus.view.panel.MovablePane
 import space.siy.citrus.view.setAnchor
 
+/**
+ * プロジェクトパネルで選択したファイルをプレビューするパネル
+ */
 class SourcePreviewPanel(mc: MainController) : MovablePane(mc), GLEventListener {
 
     val swingNode = SwingNode()

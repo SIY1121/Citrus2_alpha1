@@ -2,6 +2,9 @@ package space.siy.citrus.model.project
 
 import java.io.File
 
+/**
+ * プロジェクトの実態、モデル
+ */
 class Project(val root : File) {
     var width = 1920
     var height = 1080

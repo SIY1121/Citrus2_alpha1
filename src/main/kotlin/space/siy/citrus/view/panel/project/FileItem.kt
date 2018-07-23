@@ -31,6 +31,9 @@ class FileItem(val file: File) : VBox() {
 
     val stackPane = StackPane()
 
+    /**
+     * サムネイル非表示時のアイコン
+     */
     var icon = MaterialDesignIconFactory.get().createIcon(
             if (file.isDirectory)
                 MaterialDesignIcon.FOLDER_OUTLINE
@@ -38,12 +41,18 @@ class FileItem(val file: File) : VBox() {
                 MaterialDesignIcon.FILE, "50").apply {
         VBox.setVgrow(this, Priority.ALWAYS)
     }
+    /**
+     * サムネイル
+     */
     val thumb = ImageView().apply {
         isVisible = false
         isPreserveRatio = true
         fitWidth = 100.0
         fitHeight = 100.0
     }
+    /**
+     * ファイル名表示用
+     */
     val label = Label(file.name).apply {
         font = Font.font(16.0)
         isWrapText = true
@@ -73,7 +82,9 @@ class FileItem(val file: File) : VBox() {
 
     }
 
-
+    /**
+     * 担当ファイルを解析し、表示形態を決定する
+     */
     private fun analyzeFile() {
         try {
             val grabber = FFmpegFrameGrabber(file)
@@ -106,14 +117,13 @@ class FileItem(val file: File) : VBox() {
                         MaterialDesignIcon.FILE_MUSIC,"50").apply {
                     VBox.setVgrow(this, Priority.ALWAYS)
                 }
-                println("audio")
             }
 
             grabber.stop()
 
 
         } catch (ex: FrameGrabber.Exception) {
-            ex.printStackTrace()
+            //not media file
         }
     }
 }

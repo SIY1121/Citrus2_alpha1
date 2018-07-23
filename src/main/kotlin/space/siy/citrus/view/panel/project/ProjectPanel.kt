@@ -11,7 +11,9 @@ import space.siy.citrus.view.panel.MovablePane
 import space.siy.citrus.view.setAllAnchorToZero
 import java.io.File
 
-
+/**
+ * プロジェクトフォルダのブラウジングを行うパネル
+ */
 class ProjectPanel(mc: MainController) : MovablePane(mc) {
 
     var onItemSelected: ((it: File) -> Unit)? = null

@@ -7,6 +7,7 @@ import javafx.scene.control.SplitPane
 import javafx.scene.layout.AnchorPane
 import space.siy.citrus.view.panel.AcceptablePane
 import space.siy.citrus.view.panel.media.source.SourcePreviewPanel
+import space.siy.citrus.view.panel.media.timeline.TimelinePreviewPanel
 import space.siy.citrus.view.panel.project.ProjectPanel
 import space.siy.citrus.view.panel.timeline.TimelinePanel
 import java.net.URL
@@ -25,6 +26,7 @@ class MainController : Initializable {
     var projectPanel: ProjectPanel? = null
     var sourcePreviewPanel: SourcePreviewPanel? = null
     var timelinePanel: TimelinePanel? = null
+    var timelinePreviewPanel : TimelinePreviewPanel? = null
 
     override fun initialize(location: URL?, resources: ResourceBundle?) {
 
@@ -33,9 +35,11 @@ class MainController : Initializable {
             projectPanel = ProjectPanel(this)
             sourcePreviewPanel = SourcePreviewPanel(this)
             timelinePanel = TimelinePanel(this)
+            timelinePreviewPanel = TimelinePreviewPanel(this)
 
 
             (topHorizontalSplitPane.items[0] as AcceptablePane).children.add(sourcePreviewPanel)
+            (topHorizontalSplitPane.items[1] as AcceptablePane).children.add(timelinePreviewPanel)
             (bottomHorizontalSplitPane.items[0] as AcceptablePane).children.add(projectPanel)
             (bottomHorizontalSplitPane.items[1] as AcceptablePane).children.add(timelinePanel)
         }
