@@ -6,12 +6,13 @@ import javafx.scene.control.Label
 import javafx.scene.layout.*
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
+import space.siy.citrus.controllers.MainController
 import space.siy.citrus.view.setAllAnchorToZero
 
 /**
  * AcceptablePane間を移動可能なペイン
  */
-abstract class MovablePane : AnchorPane() {
+abstract class MovablePane(val mainController : MainController) : AnchorPane() {
 
     /**
      * タイトルラベルとコンテンツを縦に並べるペイン

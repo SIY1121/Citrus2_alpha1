@@ -3,8 +3,8 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import space.siy.citrus.view.panel.AcceptablePane?>
-<?import space.siy.citrus.view.panel.project.ProjectPane?>
-<?import space.siy.citrus.view.panel.TimelinePane?>
+<?import space.siy.citrus.view.panel.project.ProjectPanel?>
+<?import space.siy.citrus.view.panel.timeline.TimelinePanel?>
 
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.control.MenuBar?>
@@ -23,15 +23,13 @@
         </top>
         <center>
             <SplitPane fx:id="verticalSplitPane" dividerPositions="0.5" orientation="VERTICAL" >
-                <SplitPane fx:id="topHorizontalSplitPane" dividerPositions="0.33, 0.66">
-                    <AcceptablePane />
+                <SplitPane fx:id="topHorizontalSplitPane" dividerPositions="0.5">
                     <AcceptablePane />
                     <AcceptablePane />
                 </SplitPane>
-                <SplitPane fx:id="bottomHorizontalSplitPane" dividerPositions="0.33, 0.66">
+                <SplitPane fx:id="bottomHorizontalSplitPane" dividerPositions="0.5">
                     <AcceptablePane/>
                     <AcceptablePane />
-                    <AcceptablePane/>
                 </SplitPane>
             </SplitPane>
         </center>

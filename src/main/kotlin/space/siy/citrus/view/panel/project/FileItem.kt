@@ -8,6 +8,7 @@ import javafx.scene.control.Label
 import javafx.scene.image.ImageView
 import javafx.scene.image.PixelFormat
 import javafx.scene.image.WritableImage
+import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Priority
 import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
@@ -27,7 +28,9 @@ import java.nio.ByteBuffer
  * エクスプローラーのアイテム
  */
 class FileItem(val file: File) : VBox() {
+
     val stackPane = StackPane()
+
     var icon = MaterialDesignIconFactory.get().createIcon(
             if (file.isDirectory)
                 MaterialDesignIcon.FOLDER_OUTLINE
@@ -47,6 +50,7 @@ class FileItem(val file: File) : VBox() {
     }
 
     init {
+        isFocusTraversable = true//フォーカス可能にする
         alignment = Pos.CENTER
         minWidth = 120.0
         maxWidth = 120.0
@@ -63,6 +67,9 @@ class FileItem(val file: File) : VBox() {
             }
         }
 
+        addEventHandler(MouseEvent.MOUSE_CLICKED){
+            requestFocus()
+        }
 
     }
 
@@ -106,41 +113,7 @@ class FileItem(val file: File) : VBox() {
 
 
         } catch (ex: FrameGrabber.Exception) {
-
-        }
-    }
-
-    private fun genThumb() = launch {
-        try {
-            val grabber = FFmpegFrameGrabber(file)
-            grabber.pixelFormat = avutil.AV_PIX_FMT_RGB24
-            grabber.imageWidth = grabber.imageWidth / 100
-            grabber.imageHeight = grabber.imageHeight / 100
-            grabber.start()
-            val frame = grabber.grabKeyFrame() ?: return@launch
-
-            val mat = Mat(frame.imageHeight, frame.imageWidth, CvType.CV_8UC3, frame.image[0] as ByteBuffer)
-            val small = Mat(100, ((100.0 / frame.imageHeight) * frame.imageWidth).toInt(), CvType.CV_8UC3)
-            Imgproc.resize(mat, small, Size(small.width().toDouble(), small.height().toDouble()))
-
-
-            val img = WritableImage(small.width(), small.height())
-            println(small.width())
-            val buf = ByteArray(small.width() * small.height() * 3)
-            small.get(0, 0, buf)
-            img.pixelWriter.setPixels(0, 0, small.width(), small.height(), PixelFormat.getByteRgbInstance(), buf, 0, small.width() * 3)
-
-            Platform.runLater {
-                thumb.image = img
-                icon.isVisible = false
-                thumb.isVisible = true
-            }
-
-            grabber.stop()
-
-
-        } catch (ex: FrameGrabber.Exception) {
-            println("not media file")
+            ex.printStackTrace()
         }
     }
 }

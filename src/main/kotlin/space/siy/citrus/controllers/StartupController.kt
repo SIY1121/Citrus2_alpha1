@@ -4,6 +4,7 @@ import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.layout.AnchorPane
 import javafx.stage.Modality
+import javafx.stage.Stage
 import space.siy.citrus.main.Main
 import space.siy.citrus.view.createStage
 
@@ -16,6 +17,7 @@ class StartupController {
         stage.showAndWait()
         if(Main.initializedProject){
             createStage("layout/main.fxml").show()
+            (root.scene.window as Stage).close()
         }
     }
 
