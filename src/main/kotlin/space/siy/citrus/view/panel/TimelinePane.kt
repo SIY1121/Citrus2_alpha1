@@ -1,8 +1,7 @@
-package space.siy.citrus.view
-
-import javafx.scene.layout.Pane
+package space.siy.citrus.view.panel
 
 class TimelinePane : MovablePane() {
+
     init{
         title = "タイムライン"
     }
