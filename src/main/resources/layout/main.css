@@ -25,3 +25,8 @@ FileItem:hover{
     -fx-border-color: #303030;
     -fx-background-color:#202020;
 }
+
+FileItem:focused{
+    -fx-border-color: #303030;
+    -fx-background-color:#ffca28;
+}

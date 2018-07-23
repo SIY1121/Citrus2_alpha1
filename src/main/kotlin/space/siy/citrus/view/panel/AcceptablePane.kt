@@ -7,6 +7,9 @@ import javafx.scene.input.MouseDragEvent
 import javafx.scene.layout.*
 import javafx.scene.paint.Color
 
+/**
+ * MovablePaneを子に１つもつペイン
+ */
 class AcceptablePane : AnchorPane() {
     init {
         addEventHandler(MouseDragEvent.ANY) {
