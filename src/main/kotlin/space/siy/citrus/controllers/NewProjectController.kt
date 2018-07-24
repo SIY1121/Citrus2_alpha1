@@ -8,7 +8,9 @@ import javafx.scene.control.TextField
 import javafx.scene.layout.AnchorPane
 import javafx.stage.Stage
 import space.siy.citrus.main.Main
+import space.siy.citrus.model.project.Layer
 import space.siy.citrus.model.project.Project
+import space.siy.citrus.model.project.Scene
 
 import java.io.File
 import java.net.URL
@@ -45,6 +47,11 @@ class NewProjectController : Initializable {
         Main.project.height = HeightSpinner.value
         Main.project.fps = FPSSpinner.value
         Main.project.sampleRate = SampleRateSpinner.value
+        Main.project.scenes.add(Scene())
+
+        for (i in 0 until 10)
+            Main.project.scenes[0].add(Layer())
+
         Main.initializedProject = true
         (root.scene.window as Stage).close()
     }
