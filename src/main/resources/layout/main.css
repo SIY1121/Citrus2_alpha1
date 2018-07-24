@@ -1,6 +1,6 @@
 .root{
-    -fx-base:#000;
-    -fx-background-color:#000;
+    -fx-base:#101010;
+    -fx-background-color:#101010;
 
     /** コントロール選択時の縁の色 **/
     -fx-focus-color: #ffc107;
@@ -12,9 +12,17 @@
     -fx-background-color:#505050;
 }
 
+TimelinePanel .odd{
+    -fx-bacground-color: #333333;
+}
+
+TimelinePanel .even{
+    -fx-background-color: #444444;
+}
+
 FileItem{
     -fx-border-width: 1;
-    -fx-border-color: #101010;
+    -fx-border-color: #202020;
 }
 
 FileItem Text{

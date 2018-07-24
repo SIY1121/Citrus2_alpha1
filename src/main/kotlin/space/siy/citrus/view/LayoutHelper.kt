@@ -61,8 +61,12 @@ fun Node.setAllAnchorToZero() {
 }
 
 fun Node.setAnchor(top: Double, bottom: Double, left: Double, right: Double) {
-    AnchorPane.setTopAnchor(this, top)
-    AnchorPane.setBottomAnchor(this, bottom)
-    AnchorPane.setLeftAnchor(this, left)
-    AnchorPane.setRightAnchor(this, right)
+    if (top != Double.NaN)
+        AnchorPane.setTopAnchor(this, top)
+    if (bottom != Double.NaN)
+        AnchorPane.setBottomAnchor(this, bottom)
+    if (left != Double.NaN)
+        AnchorPane.setLeftAnchor(this, left)
+    if (right != Double.NaN)
+        AnchorPane.setRightAnchor(this, right)
 }
