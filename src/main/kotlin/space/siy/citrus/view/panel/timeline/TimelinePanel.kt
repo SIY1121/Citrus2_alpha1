@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.collections.ListChangeListener
 import javafx.geometry.Orientation
+import javafx.scene.Cursor
 import javafx.scene.control.Label
 import javafx.scene.control.ScrollBar
 import javafx.scene.control.ScrollPane
@@ -57,7 +58,32 @@ class TimelinePanel(mc: MainController) : MovablePane(mc) {
     val layerPanes: List<Pane>
         get() = timelineVbox.children.map { it as Pane }
 
+    val selectedObjects = ArrayList<TimelineObject>()
+
+    enum class EditMode {
+        None, Increment, Decrement, Move
+    }
+
+    var editMode = EditMode.None
+        set(value) {
+            field = value
+            timelineWrapper.cursor = when (field) {
+                EditMode.Increment -> Cursor.E_RESIZE
+                EditMode.Decrement -> Cursor.E_RESIZE
+                EditMode.Move -> Cursor.MOVE
+                else -> Cursor.DEFAULT
+            }
+        }
+
+
     init {
+        setupLayout()
+        setupObjectMove()
+
+        loadScene(0)
+    }
+
+    private fun setupLayout() {
         title = "タイムライン"
 
         labelScrollPane.hbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
@@ -86,9 +112,35 @@ class TimelinePanel(mc: MainController) : MovablePane(mc) {
 
         timelineScrollPane.hvalueProperty().bindBidirectional(hbar.valueProperty())
 
+        caret.xProperty().bind(currentFrame.multiply(pixelPerFrame))//currentFrameにバインド
         timelineWrapper.children.add(caret)
+    }
 
-        loadScene(0)
+    private fun setupObjectMove() {
+        timelineWrapper.setOnMouseClicked {
+            currentFrame.value = (it.x / pixelPerFrame.value.toDouble()).toInt()
+        }
+        timelineWrapper.setOnMouseDragged { event ->
+            if (selectedObjects.isEmpty())
+                currentFrame.value = (event.x / pixelPerFrame.value.toDouble()).toInt()
+            else {
+                selectedObjects.forEach {
+                    when (editMode) {
+                        EditMode.Decrement -> it.cObj.start.value = (event.x / pixelPerFrame.value.toDouble()).toInt()
+                        EditMode.Move ->{
+
+                        }
+                    }
+
+                }
+            }
+        }
+        timelineWrapper.setOnMouseReleased {
+            selectedObjects.clear()
+        }
+        timelineWrapper.setOnMouseMoved {
+            editMode = EditMode.None
+        }
     }
 
     private fun loadScene(scene: Int) {
@@ -152,9 +204,13 @@ class TimelinePanel(mc: MainController) : MovablePane(mc) {
             if (it.button == MouseButton.PRIMARY) {
 
             } else {
-                Image(scene, layer)
+                Image(scene, layer).apply {
+                    start.value = 100
+                    end.value = 200
+                }
             }
         }
     }
+
 
 }
