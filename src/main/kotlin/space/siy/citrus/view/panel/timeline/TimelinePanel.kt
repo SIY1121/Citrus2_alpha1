@@ -1,22 +1,30 @@
 package space.siy.citrus.view.panel.timeline
 
+import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.property.SimpleIntegerProperty
-import javafx.geometry.Insets
+import javafx.collections.ListChangeListener
 import javafx.geometry.Orientation
 import javafx.scene.control.Label
 import javafx.scene.control.ScrollBar
 import javafx.scene.control.ScrollPane
-import javafx.scene.layout.*
+import javafx.scene.input.MouseButton
+import javafx.scene.input.TransferMode
+import javafx.scene.layout.AnchorPane
+import javafx.scene.layout.Pane
+import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import space.siy.citrus.controllers.MainController
 import space.siy.citrus.main.Main
+import space.siy.citrus.model.objects.CitrusObject
+import space.siy.citrus.model.objects.Image
 import space.siy.citrus.view.panel.MovablePane
 import space.siy.citrus.view.setAnchor
 
+/**
+ * タイムラインコントロール本体
+ */
 class TimelinePanel(mc: MainController) : MovablePane(mc) {
-
-    val layerHeight = 30.0
 
     val labelScrollPane = ScrollPane()
     val labelVBox = VBox()
@@ -37,6 +45,17 @@ class TimelinePanel(mc: MainController) : MovablePane(mc) {
     }
 
     val currentFrame = SimpleIntegerProperty()
+
+    val pixelPerFrame = SimpleIntegerProperty().apply {
+        value = 1
+    }
+
+    val layerHeight = SimpleDoubleProperty().apply {
+        value = 30.0
+    }
+
+    val layerPanes: List<Pane>
+        get() = timelineVbox.children.map { it as Pane }
 
     init {
         title = "タイムライン"
@@ -74,26 +93,68 @@ class TimelinePanel(mc: MainController) : MovablePane(mc) {
 
     private fun loadScene(scene: Int) {
         labelVBox.children.clear()
-        timelineVbox.children.clear()
+        timelineVbox.children.clear()//TODO クリア時にリスナの解除
 
         Main.project.scenes[scene].forEachIndexed { index, layer ->
-            labelVBox.children.add(Label("layer$index").apply {
-                if (index % 2 == 0)
-                    styleClass.add("even")
-                else
-                    styleClass.add("odd")
-                maxWidth = Double.MAX_VALUE
-                minHeight = layerHeight
-            })
-            timelineVbox.children.add(Pane().apply {
-                if (index % 2 == 0)
-                    styleClass.add("even")
-                else
-                    styleClass.add("odd")
-
-                minWidth = 2000.0
-                minHeight = layerHeight
-            })
+            labelVBox.children.add(genLayerLabel(scene, index))
+            timelineVbox.children.add(genLayerPane(scene, index))
         }
     }
+
+    private fun addObjectToTimeline(cObj: CitrusObject) {
+        layerPanes[cObj.layer.value.toInt()].children.add(TimelineObject(this, cObj))
+    }
+
+    private fun genLayerLabel(scene: Int, layer: Int): Label = Label("layer$layer").apply {
+        if (layer % 2 == 0)
+            styleClass.add("even")
+        else
+            styleClass.add("odd")
+        maxWidth = Double.MAX_VALUE
+        minHeightProperty().bind(layerHeight)
+    }
+
+    private fun genLayerPane(scene: Int, layer: Int): Pane = Pane().apply {
+        if (layer % 2 == 0)
+            styleClass.add("even")
+        else
+            styleClass.add("odd")
+
+        minWidth = 2000.0
+        minHeightProperty().bind(layerHeight)
+
+
+        Main.project.scenes[scene][layer].addListener { c: ListChangeListener.Change<out CitrusObject> ->
+            c.next()
+            when {
+                c.wasAdded() -> {
+                    c.addedSubList.forEach {
+                        children.add(TimelineObject(this@TimelinePanel, it))
+                    }
+                }
+            }
+
+        }
+
+
+        setOnDragOver {
+            if (it.dragboard.hasFiles()) {
+                it.acceptTransferModes(TransferMode.COPY)
+            }
+            it.consume()
+        }
+
+        setOnDragDropped {
+            it.consume()
+        }
+
+        setOnMouseClicked {
+            if (it.button == MouseButton.PRIMARY) {
+
+            } else {
+                Image(scene, layer)
+            }
+        }
+    }
+
 }

@@ -33,6 +33,7 @@ class ProjectPanel(mc: MainController) : MovablePane(mc) {
         scrollPane.content = flowPane
         flowPane.fitToParentW(content)
         loadDir(Main.project.root)
+        scrollPane.isFocusTraversable = false
     }
 
     private fun loadDir(dir: File) {

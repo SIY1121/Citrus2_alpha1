@@ -1,11 +1,13 @@
 package space.siy.citrus.model.project
 
 import com.jogamp.opengl.GL3
+import javafx.beans.property.SimpleListProperty
+import javafx.collections.FXCollections
 import space.siy.citrus.model.interfaces.AudioSampleProvider
 import space.siy.citrus.model.interfaces.Drawable
 import space.siy.citrus.model.objects.CitrusObject
 
-class Layer : ArrayList<CitrusObject>(), Drawable, AudioSampleProvider {
+class Layer : SimpleListProperty<CitrusObject>(FXCollections.observableList(ArrayList<CitrusObject>())), Drawable, AudioSampleProvider {
 
     /**
      * 現在アクティブなオブジェクト
