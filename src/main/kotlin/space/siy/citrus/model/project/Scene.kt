@@ -1,11 +1,13 @@
 package space.siy.citrus.model.project
 
 import com.jogamp.opengl.GL3
+import javafx.beans.property.SimpleListProperty
+import javafx.collections.FXCollections
 import space.siy.citrus.main.Main
 import space.siy.citrus.model.interfaces.AudioSampleProvider
 import space.siy.citrus.model.interfaces.Drawable
 
-class Scene : ArrayList<Layer>(), Drawable, AudioSampleProvider {
+class Scene : SimpleListProperty<Layer>(FXCollections.observableList(ArrayList<Layer>())), Drawable, AudioSampleProvider {
 
     override fun draw(gl: GL3, mode: Drawable.Mode, frame: Int) {
         forEach {

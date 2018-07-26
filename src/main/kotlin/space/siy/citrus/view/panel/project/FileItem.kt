@@ -8,7 +8,9 @@ import javafx.scene.control.Label
 import javafx.scene.image.ImageView
 import javafx.scene.image.PixelFormat
 import javafx.scene.image.WritableImage
+import javafx.scene.input.ClipboardContent
 import javafx.scene.input.MouseEvent
+import javafx.scene.input.TransferMode
 import javafx.scene.layout.Priority
 import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
@@ -78,6 +80,15 @@ class FileItem(val file: File) : VBox() {
 
         addEventHandler(MouseEvent.MOUSE_CLICKED){
             requestFocus()
+        }
+
+        setOnDragDetected {
+            println("drag detected")
+            val db = startDragAndDrop(TransferMode.COPY)
+            db.setContent(ClipboardContent().apply {
+                putFiles(arrayListOf(file))
+            })
+            it.consume()
         }
 
     }

@@ -29,7 +29,9 @@ open class CitrusObject(defScene: Int, defLayer: Int) {
     /**
      * このオブジェクトの終了位置
      */
-    var end = SimpleIntegerProperty()
+    var end = SimpleIntegerProperty().apply {
+        value = 100
+    }
 
 
     /**メンバ終了**/
