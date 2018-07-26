@@ -127,8 +127,14 @@ class TimelinePanel(mc: MainController) : MovablePane(mc) {
                 selectedObjects.forEach {
                     when (editMode) {
                         EditMode.Decrement -> it.cObj.start.value = (event.x / pixelPerFrame.value.toDouble()).toInt()
-                        EditMode.Move ->{
+                        EditMode.Move -> {
+                            val length = it.cObj.end.value.toInt() - it.cObj.start.value.toInt()
+                            it.cObj.start.value = (event.x / pixelPerFrame.value.toDouble()).toInt()
+                            it.cObj.end.value = (event.x / pixelPerFrame.value.toDouble()).toInt() + length
 
+                            if ((event.y / layerHeight.value.toDouble()).toInt() != it.cObj.layer.value.toInt()) {
+                                it.cObj.layer.value = (event.y / layerHeight.value.toDouble()).toInt()
+                            }
                         }
                     }
 
@@ -182,6 +188,12 @@ class TimelinePanel(mc: MainController) : MovablePane(mc) {
                 c.wasAdded() -> {
                     c.addedSubList.forEach {
                         children.add(TimelineObject(this@TimelinePanel, it))
+                    }
+                }
+                c.wasRemoved() -> {
+                    c.removed.forEach {
+                        val removeObj = children.first { (it as TimelineObject).cObj == it }
+                        children.remove(removeObj)
                     }
                 }
             }
