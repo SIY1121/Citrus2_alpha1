@@ -1,6 +1,7 @@
 package space.siy.citrus.model.objects
 
 import javafx.beans.property.SimpleIntegerProperty
+import javafx.beans.property.SimpleStringProperty
 import space.siy.citrus.main.Main
 
 open class CitrusObject(defScene: Int, defLayer: Int) {
@@ -33,6 +34,12 @@ open class CitrusObject(defScene: Int, defLayer: Int) {
         value = 100
     }
 
+    /**
+     * 動的な表示名
+      */
+    var displayName = SimpleStringProperty().apply {
+        value = "ラベル"
+    }
 
     /**メンバ終了**/
 
@@ -55,7 +62,11 @@ open class CitrusObject(defScene: Int, defLayer: Int) {
     /**
      * オブジェクトが指定のフレームでアクティブかどうか判定
      */
-    fun isActive(frame : Int) = (frame in start.value.toInt() until end.value.toInt())
+    fun isActive(frame: Int) = (frame in start.value.toInt() until end.value.toInt())
+
+    fun remove() {
+        removeFrom(scene.value, layer.value)
+    }
 
     init {
 

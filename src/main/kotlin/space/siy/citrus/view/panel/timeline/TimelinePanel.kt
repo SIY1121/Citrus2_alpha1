@@ -8,6 +8,8 @@ import javafx.scene.Cursor
 import javafx.scene.control.Label
 import javafx.scene.control.ScrollBar
 import javafx.scene.control.ScrollPane
+import javafx.scene.control.Slider
+import javafx.scene.input.KeyCode
 import javafx.scene.input.MouseButton
 import javafx.scene.input.TransferMode
 import javafx.scene.layout.AnchorPane
@@ -45,10 +47,14 @@ class TimelinePanel(mc: MainController) : MovablePane(mc) {
         fill = Color.RED
     }
 
+    val slider = Slider(0.05, 1.0, 1.0).apply {
+
+    }
+
     val currentFrame = SimpleIntegerProperty()
 
-    val pixelPerFrame = SimpleIntegerProperty().apply {
-        value = 1
+    val pixelPerFrame = SimpleDoubleProperty().apply {
+        value = 1.0
     }
 
     val layerHeight = SimpleDoubleProperty().apply {
@@ -114,12 +120,14 @@ class TimelinePanel(mc: MainController) : MovablePane(mc) {
 
         caret.xProperty().bind(currentFrame.multiply(pixelPerFrame))//currentFrameにバインド
         timelineWrapper.children.add(caret)
+
+        pixelPerFrame.bindBidirectional(slider.valueProperty())
+        slider.maxWidth = 80.0
+        AnchorPane.setTopAnchor(slider, 0.0)
+        content.children.add(slider)
     }
 
     private fun setupObjectMove() {
-        timelineWrapper.setOnMouseClicked {
-            currentFrame.value = (it.x / pixelPerFrame.value.toDouble()).toInt()
-        }
         timelineWrapper.setOnMouseDragged { event ->
             if (selectedObjects.isEmpty())
                 currentFrame.value = (event.x / pixelPerFrame.value.toDouble()).toInt()
@@ -129,24 +137,37 @@ class TimelinePanel(mc: MainController) : MovablePane(mc) {
                         EditMode.Decrement -> it.cObj.start.value = (event.x / pixelPerFrame.value.toDouble()).toInt()
                         EditMode.Move -> {
                             val length = it.cObj.end.value.toInt() - it.cObj.start.value.toInt()
-                            it.cObj.start.value = (event.x / pixelPerFrame.value.toDouble()).toInt()
-                            it.cObj.end.value = (event.x / pixelPerFrame.value.toDouble()).toInt() + length
+                            it.cObj.start.value = ((event.x - it.pressedOffset) / pixelPerFrame.value.toDouble()).toInt()
+                            it.cObj.end.value = ((event.x - it.pressedOffset) / pixelPerFrame.value.toDouble()).toInt() + length
 
                             if ((event.y / layerHeight.value.toDouble()).toInt() != it.cObj.layer.value.toInt()) {
                                 it.cObj.layer.value = (event.y / layerHeight.value.toDouble()).toInt()
                             }
                         }
+                        EditMode.Increment -> it.cObj.end.value = (event.x / pixelPerFrame.value.toDouble()).toInt()
                     }
 
                 }
             }
         }
         timelineWrapper.setOnMouseReleased {
-            selectedObjects.clear()
+            if (selectedObjects.isEmpty())
+                currentFrame.value = (it.x / pixelPerFrame.value.toDouble()).toInt()
+            else
+                selectedObjects.clear()
         }
         timelineWrapper.setOnMouseMoved {
             editMode = EditMode.None
         }
+        timelineWrapper.setOnKeyPressed {
+            if (it.code == KeyCode.ESCAPE) {
+                selectedObjects.forEach { it.cObj.remove() }
+            }
+        }
+        timelineScrollPane.setOnKeyPressed {
+            println(it)
+        }
+
     }
 
     private fun loadScene(scene: Int) {
@@ -181,18 +202,20 @@ class TimelinePanel(mc: MainController) : MovablePane(mc) {
         minWidth = 2000.0
         minHeightProperty().bind(layerHeight)
 
-
+        //自分が担当するレイヤーの変更を監視
         Main.project.scenes[scene][layer].addListener { c: ListChangeListener.Change<out CitrusObject> ->
             c.next()
             when {
+            //オブジェクトの追加に合わせてTimelineObjectを生成
                 c.wasAdded() -> {
                     c.addedSubList.forEach {
                         children.add(TimelineObject(this@TimelinePanel, it))
                     }
                 }
+            //オブジェクトの削除に合わせてTimelineObjectも破棄
                 c.wasRemoved() -> {
-                    c.removed.forEach {
-                        val removeObj = children.first { (it as TimelineObject).cObj == it }
+                    c.removed.forEach { rObj ->
+                        val removeObj = children.first { (it as TimelineObject).cObj == rObj }
                         children.remove(removeObj)
                     }
                 }
