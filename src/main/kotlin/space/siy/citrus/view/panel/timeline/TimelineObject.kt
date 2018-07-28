@@ -11,7 +11,9 @@ class TimelineObject(val tp: TimelinePanel, val cObj: CitrusObject) : Pane() {
      */
     var pressedOffset = 0.0
 
-    val label = Label("Label")
+    val label = Label("Label").apply {
+        minWidth = 0.0
+    }
 
     init {
         minHeightProperty().bind(tp.layerHeight)

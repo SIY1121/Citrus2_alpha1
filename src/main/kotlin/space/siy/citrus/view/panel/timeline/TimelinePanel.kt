@@ -5,13 +5,12 @@ import javafx.beans.property.SimpleIntegerProperty
 import javafx.collections.ListChangeListener
 import javafx.geometry.Orientation
 import javafx.scene.Cursor
+import javafx.scene.Scene
 import javafx.scene.control.Label
 import javafx.scene.control.ScrollBar
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.Slider
-import javafx.scene.input.KeyCode
-import javafx.scene.input.MouseButton
-import javafx.scene.input.TransferMode
+import javafx.scene.input.*
 import javafx.scene.layout.AnchorPane
 import javafx.scene.layout.Pane
 import javafx.scene.layout.VBox
@@ -47,7 +46,7 @@ class TimelinePanel(mc: MainController) : MovablePane(mc) {
         fill = Color.RED
     }
 
-    val slider = Slider(0.05, 1.0, 1.0).apply {
+    val slider = Slider(0.05, 5.0, 1.0).apply {
 
     }
 
@@ -89,6 +88,20 @@ class TimelinePanel(mc: MainController) : MovablePane(mc) {
         loadScene(0)
     }
 
+    /**
+     * Project.Scene出ない注意
+     */
+    override fun onSceneLoaded(scene: Scene) {
+        content.scene.addEventHandler(KeyEvent.KEY_PRESSED){
+            if (it.code == KeyCode.DELETE) {
+                selectedObjects.forEach { it.cObj.remove() }
+            }
+            if(it.isControlDown && it.code == KeyCode.Z){
+                println("undo")
+            }
+        }
+    }
+
     private fun setupLayout() {
         title = "タイムライン"
 
@@ -115,6 +128,7 @@ class TimelinePanel(mc: MainController) : MovablePane(mc) {
         AnchorPane.setRightAnchor(hbar, 0.0)
         AnchorPane.setLeftAnchor(hbar, 80.0)
         content.children.add(hbar)
+
 
         timelineScrollPane.hvalueProperty().bindBidirectional(hbar.valueProperty())
 
@@ -159,15 +173,6 @@ class TimelinePanel(mc: MainController) : MovablePane(mc) {
         timelineWrapper.setOnMouseMoved {
             editMode = EditMode.None
         }
-        timelineWrapper.setOnKeyPressed {
-            if (it.code == KeyCode.ESCAPE) {
-                selectedObjects.forEach { it.cObj.remove() }
-            }
-        }
-        timelineScrollPane.setOnKeyPressed {
-            println(it)
-        }
-
     }
 
     private fun loadScene(scene: Int) {

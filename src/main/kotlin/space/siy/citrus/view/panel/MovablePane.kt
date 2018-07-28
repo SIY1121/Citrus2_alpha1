@@ -2,6 +2,7 @@ package space.siy.citrus.view.panel
 
 import javafx.geometry.Insets
 import javafx.scene.Cursor
+import javafx.scene.Scene
 import javafx.scene.control.Label
 import javafx.scene.layout.*
 import javafx.scene.paint.Color
@@ -12,7 +13,7 @@ import space.siy.citrus.view.setAllAnchorToZero
 /**
  * AcceptablePane間を移動可能なペイン
  */
-abstract class MovablePane(val mainController : MainController) : AnchorPane() {
+abstract class MovablePane(val mainController: MainController) : AnchorPane() {
 
     /**
      * タイトルラベルとコンテンツを縦に並べるペイン
@@ -52,6 +53,11 @@ abstract class MovablePane(val mainController : MainController) : AnchorPane() {
         //background = Background(BackgroundFill(Color(1.0, 0.0, 0.0, 0.3), CornerRadii(0.0), Insets(0.0)))
     }
 
+    /**
+     * Node.Sceneが利用可能になったら呼び出される
+     */
+    open fun onSceneLoaded(scene: Scene) {}
+
     init {
         //親ペインに張り付く
         this.setAllAnchorToZero()
@@ -61,7 +67,7 @@ abstract class MovablePane(val mainController : MainController) : AnchorPane() {
 
         vBox.children.add(titleLabel)
         vBox.children.add(content)
-        VBox.setVgrow(content,Priority.ALWAYS)
+        VBox.setVgrow(content, Priority.ALWAYS)
 
         children.add(overlayPane)
         overlayPane.setAllAnchorToZero()
@@ -86,5 +92,9 @@ abstract class MovablePane(val mainController : MainController) : AnchorPane() {
             it.consume()
         }
 
+        content.sceneProperty().addListener { _, o, n ->
+            if (o == null && n != null)
+                onSceneLoaded(n)
+        }
     }
 }
